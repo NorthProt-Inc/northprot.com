@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Design tokens — paper/ink editorial palette (OKLCH)
+   ========================================================================== */
+@theme inline {
+  /* Surface */
+  --color-paper: oklch(98% 0.012 85);
+  --color-paper-edge: oklch(95% 0.012 85);
+
+  /* Ink */
+  --color-ink: oklch(20% 0.02 270);
+  --color-ink-soft: oklch(45% 0.02 270);
+
+  /* Structure */
+  --color-rule: oklch(85% 0.012 270);
+
+  /* Accent — cyan darkened from 55% → 50% to clear WCAG AA (4.5:1) on paper */
+  --color-cyan: oklch(50% 0.13 215);
+  --color-cyan-soft: oklch(70% 0.10 215);
+
+  /* Fonts — variables are written by next/font/google on <html> */
+  --font-serif: var(--font-serif-var);
+  --font-mono: var(--font-mono-var);
+  --font-sans: var(--font-sans-var);
+}
+
+/* ============================================================================
+   Base typography
+   ========================================================================== */
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-feature-settings: "liga", "kern", "calt", "onum";
+  font-optical-sizing: auto;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings: "liga", "kern", "calt";
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+::selection {
+  background-color: var(--color-cyan-soft);
+  color: var(--color-ink);
+}
+
+/* ============================================================================
+   Focus — visible 2px cyan ring on keyboard navigation only
+   ========================================================================== */
+:where(a, button, [role="button"], input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================================
+   Reveal — scroll-triggered fade + translate
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 500ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 500ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-stagger > .reveal-item {
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > .reveal-item {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================================
+   Notebook grid — container-query driven 3-column layout
+   margin [160px] | body [640px max] | rail [1fr]
+   ========================================================================== */
+.notebook-grid {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@container (min-width: 1024px) {
+  .notebook-grid {
+    grid-template-columns: 160px minmax(0, 640px) 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* ============================================================================
+   Utility — hide horizontal scrollbar chrome on mobile overflow rows
+   (StackTable values scroll sideways on narrow viewports)
+   ========================================================================== */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
